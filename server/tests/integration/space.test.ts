@@ -3,8 +3,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import app from "../../src/app.js";
 
-const mockPlace = {
-  id: "place-uuid-1",
+const mockSpace = {
+  id: "space-uuid-1",
   name: "Power Gym",
   location: "Gothenburg",
   description: "24/7 fitness center",
@@ -18,7 +18,7 @@ const mockReview = {
   id: "review-uuid-1",
   content: "Amazing place",
   rating: 5,
-  spaceId: "place-uuid-1",
+  spaceId: "space-uuid-1",
   userId: null,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -26,7 +26,7 @@ const mockReview = {
 
 vi.mock("../../src/prismaClient.js", () => ({
   prisma: {
-    place: {
+    space: {
       findMany: vi.fn(),
       findUnique: vi.fn(),
       create: vi.fn(),
@@ -43,43 +43,43 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-describe("Places API", () => {
-  it("GET /places should return all places", async () => {
+describe("Spaces API", () => {
+  it("GET /spaces should return all spaces", async () => {
     const { prisma } = await import("../../src/prismaClient.js");
-    vi.mocked(prisma.place.findMany).mockResolvedValue([mockPlace]);
+    vi.mocked(prisma.space.findMany).mockResolvedValue([mockSpace]);
 
-    const response = await request(app).get("/places");
+    const response = await request(app).get("/spaces");
 
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
     expect(response.body[0].name).toBe("Power Gym");
   });
 
-  it("GET /places/:id should return a single place", async () => {
+  it("GET /spaces/:id should return a single space", async () => {
     const { prisma } = await import("../../src/prismaClient.js");
-    vi.mocked(prisma.place.findUnique).mockResolvedValue(mockPlace);
+    vi.mocked(prisma.space.findUnique).mockResolvedValue(mockSpace);
 
-    const response = await request(app).get("/places/place-uuid-1");
+    const response = await request(app).get("/spaces/space-uuid-1");
 
     expect(response.status).toBe(200);
-    expect(response.body.id).toBe("place-uuid-1");
+    expect(response.body.id).toBe("space-uuid-1");
   });
 
-  it("GET /places/:id should return 404 for unknown place", async () => {
+  it("GET /spaces/:id should return 404 for unknown space", async () => {
     const { prisma } = await import("../../src/prismaClient.js");
-    vi.mocked(prisma.place.findUnique).mockResolvedValue(null);
+    vi.mocked(prisma.space.findUnique).mockResolvedValue(null);
 
-    const response = await request(app).get("/places/nonexistent-id");
+    const response = await request(app).get("/spaces/nonexistent-id");
 
     expect(response.status).toBe(404);
-    expect(response.body.message).toBe("Place not found");
+    expect(response.body.message).toBe("Space not found");
   });
 
-  it("POST /places should create a new place", async () => {
+  it("POST /spaces should create a new space", async () => {
     const { prisma } = await import("../../src/prismaClient.js");
-    vi.mocked(prisma.place.create).mockResolvedValue(mockPlace);
+    vi.mocked(prisma.space.create).mockResolvedValue(mockSpace);
 
-    const response = await request(app).post("/places").send({
+    const response = await request(app).post("/spaces").send({
       name: "Power Gym",
       location: "Gothenburg",
       description: "24/7 fitness center",
@@ -91,12 +91,12 @@ describe("Places API", () => {
     expect(response.body.name).toBe("Power Gym");
   });
 
-  it("POST /places/:id/reviews should add a review", async () => {
+  it("POST /spaces/:id/reviews should add a review", async () => {
     const { prisma } = await import("../../src/prismaClient.js");
     vi.mocked(prisma.review.create).mockResolvedValue(mockReview);
 
     const response = await request(app)
-      .post("/places/place-uuid-1/reviews")
+      .post("/spaces/space-uuid-1/reviews")
       .send({ rating: 5, comment: "Amazing place" });
 
     expect(response.status).toBe(201);
