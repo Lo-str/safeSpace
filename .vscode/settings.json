@@ -1,0 +1,4 @@
+// @ts-nocheck
+{
+  "markdown.styles": [".vscode/markdown.css"]
+}

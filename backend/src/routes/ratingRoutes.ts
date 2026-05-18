@@ -1,0 +1,18 @@
+import express from "express";
+import {
+  createEntity,
+  deleteEntity,
+  getEntity,
+  getEntities,
+  updateEntity,
+} from "../controllers/crudController.js";
+
+const router = express.Router();
+
+router.get("/", (req, res) => getEntities(req, res, "rating"));
+router.get("/:id", (req, res) => getEntity(req, res, "rating"));
+router.post("/", (req, res) => createEntity(req, res, "rating"));
+router.put("/:id", (req, res) => updateEntity(req, res, "rating"));
+router.delete("/:id", (req, res) => deleteEntity(req, res, "rating"));
+
+export default router;
