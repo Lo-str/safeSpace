@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { submitReview } from "../../services/api";
 import "./ReviewForm.css";
 
 type ReviewProps = {
@@ -8,7 +9,7 @@ type ReviewProps = {
 };
 
 function ReviewForm({ placeId, onReviewSubmitted }: ReviewProps) {
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState("");
   const [authorInput, setAuthorInput] = useState("");
@@ -24,13 +25,8 @@ function ReviewForm({ placeId, onReviewSubmitted }: ReviewProps) {
     setStatus("submitting");
 
     try {
-      const response = await fetch(`/api/places/${placeId}/reviews`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ author, rating, comment }),
-      });
-
-      if (!response.ok) throw new Error("Failed to submit review");
+      const token = await getAccessTokenSilently();
+      await submitReview(placeId, { rating, comment }, token);
 
       setStatus("success");
       setRating(null);

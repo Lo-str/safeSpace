@@ -157,3 +157,70 @@ curl http://localhost:4000/spaces   # expect []
 - `CLIENT_ORIGIN` on Render is a placeholder until the Vercel URL exists
 - The client's [client/src/services/api.ts](client/src/services/api.ts) still references the wrong routes — Phase 3 will fix this and wire the frontend to the deployed backend
 - The two CI workflows ([.github/workflows/test.yml](.github/workflows/test.yml) and [.github/workflows/frontend-test.yml](.github/workflows/frontend-test.yml)) still exist as-is; Phase 6 will consolidate into a single `deploy.yml`
+
+---
+
+## Branch `fix/frontendApi` — Wire Frontend to Backend
+
+**Scope:** repair the broken API integration. Frontend was calling `/api/places/*` but the backend serves `/spaces/*`. The Vite dev proxy rewrote `/api/*` → `/*` but the resource name mismatch meant no fetch had ever worked end-to-end.
+
+**This branch does NOT touch deployment.** Phase 3 (Vercel) will be on a separate branch.
+
+### Files modified
+
+**[client/src/services/api.ts](client/src/services/api.ts)** — full rewrite (53 lines)
+
+- Was: stub exporting an unused `apiPaths` object with `/gyms` and `/auth/login` paths
+- Now: real helpers (`getSpaces`, `getSpace`, `submitReview`) that use `VITE_API_BASE_URL`, share a `handleResponse` error path, and define `Space` / `Review` interfaces matching what the backend actually returns. `submitReview` accepts an Auth0 bearer token and sets the `Authorization` header
+
+**[client/src/components/PlaceList.tsx](client/src/components/PlaceList.tsx) lines 4, 14-15** — call `getSpaces()` instead of `fetch("/api/places")`
+
+**[client/src/components/PlaceInfo.tsx](client/src/components/PlaceInfo.tsx) lines 5, 13-22** — call `getSpace(id)` instead of `fetch("/api/places/:id")`. Added `if (!id) return` guard. Error type narrowed from `any` to `unknown` with `instanceof Error` check
+
+**[client/src/components/ReviewForm/ReviewForm.tsx](client/src/components/ReviewForm/ReviewForm.tsx) lines 3, 12, 26-28** — call `submitReview(placeId, {rating, comment}, token)`. Now pulls a token via `getAccessTokenSilently()` from `useAuth0` (backend POST `/spaces/:id/reviews` is auth-protected). Body shape changed from `{author, rating, comment}` to `{rating, comment}` — `author` was being sent but the backend always ignored it; the displayed `Posting as ...` UI still uses the Auth0 user object
+
+**[client/src/pages/Browse/Browse.tsx](client/src/pages/Browse/Browse.tsx) lines 6, 8-21, 134-145** — call `getSpaces()`. Interface fields tightened: `id: number` → `id: string` (backend uses UUID strings), and `venueType`/`tags`/`reviews` marked optional since the current backend Space model doesn't expose `venueType` or `tags` at all
+
+**[client/src/pages/Cards/Cards.tsx](client/src/pages/Cards/Cards.tsx) lines 5, 13-30, 81** — call `getSpace(id)`. Review render changed from `{review.comment}` to `{review.content}` to match the backend Prisma `Review` model
+
+**[client/src/pages/Review/Review.tsx](client/src/pages/Review/Review.tsx) lines 4, 12-15, 27** — call `getSpace(id)` instead of `fetch("/api/places/:id")`. `placeId={id!}` non-null assertion since the parent route guarantees an id
+
+**[client/vite.config.ts](client/vite.config.ts) lines 4-10** — removed the `/api → localhost:4000` dev proxy and the leftover commented `base:` line. Frontend now uses absolute URLs via `VITE_API_BASE_URL`, so the proxy is dead config
+
+**[server/src/controllers/spaceController.ts](server/src/controllers/spaceController.ts) lines 4-7, 21-24** — added `include: { reviews: true }` to both `findMany` and `findUnique`. Without this, the frontend's star rating component would show 0/5 on every space because the API never returned the related reviews
+
+### Test updates
+
+**[client/src/components/__tests__/ReviewForm.test.tsx](client/src/components/__tests__/ReviewForm.test.tsx) lines 62-115**
+
+- URL fragment expectation: `/places/${mockPlaceId}/reviews` → `/spaces/${mockPlaceId}/reviews`
+- Body assertion: `{author, rating, comment}` → `{rating, comment}`
+- New `Authorization: "Bearer mock-token"` header expectation (Auth0 mock already returns `mock-token` from `getAccessTokenSilently`)
+- Renamed the second test from "uses the Auth0 user name as the author" to "sends a bearer token from Auth0 when submitting" — what it actually verifies now
+
+**[client/src/pages/__test__/Cards.test.tsx](client/src/pages/__test__/Cards.test.tsx) lines 84-85** — review fixture field renamed `comment` → `content` so the assertion `getByText("Great place!")` still finds the rendered text
+
+### Verification
+
+```bash
+cd /home/lo/safeSpace/client
+npm test -- --run
+# Test Files  7 passed (7)
+# Tests       30 passed (30)
+```
+
+Server typecheck (`cd server && npm run typecheck`) also clean.
+
+### Known issues NOT touched on this branch
+
+- [client/src/__mock__/auth0Mock.ts](client/src/__mock__/auth0Mock.ts) is broken (contains developer notes inside what should be code) — pre-existing, not imported anywhere, harmless
+- Backend `Space` model has no `venueType`, `tags`, or `imageUrl` fields — Browse's filter UI for those will render but produce no matches. Would need a schema migration to fix; out of scope
+- `PlaceList` and `PlaceInfo` components in `client/src/components/` are not imported by any non-test file. They got updated for consistency but are effectively dead code; could be deleted in a separate cleanup
+- ReviewForm's "Your name" input for unauthenticated users still renders, but unauth submission will 401 because the backend route requires auth. Tiny UX gap — handled later when we audit auth flows
+
+### What still needs to happen for Phase 3 proper (next branch)
+
+- Vercel config (vercel.json) at `client/` root
+- Vercel deploy: set `VITE_API_BASE_URL=https://<render-url>.onrender.com` and the four `VITE_AUTH0_*` env vars
+- Update Auth0 application's Allowed Callback / Logout / Web Origin URLs to include the Vercel URL
+- Update Render's `CLIENT_ORIGIN` env var to the Vercel URL

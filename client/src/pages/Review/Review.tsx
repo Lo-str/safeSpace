@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ReviewForm from "../../components/ReviewForm/ReviewForm";
+import { getSpace } from "../../services/api";
 import "./Review.css";
 
 function Review() {
@@ -9,8 +10,8 @@ function Review() {
   const [placeName, setPlaceName] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`/api/places/${id}`)
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
+    if (!id) return;
+    getSpace(id)
       .then((data) => setPlaceName(data.name))
       .catch(() => setPlaceName(null));
   }, [id]);
@@ -24,7 +25,7 @@ function Review() {
         Leave a review{placeName ? ` for ${placeName}` : ""}
       </h1>
       <ReviewForm
-        placeId={id}
+        placeId={id!}
         onReviewSubmitted={() => navigate(`/places/${id}`)}
       />
     </div>

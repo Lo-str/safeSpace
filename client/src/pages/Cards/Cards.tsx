@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./Cards.css";
 import StarRating, { averageRating } from "../../components/StarRating";
+import { getSpace } from "../../services/api";
 
 function Cards() {
   const { id } = useParams();
@@ -10,14 +11,13 @@ function Cards() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!id) return;
     let cancelled = false;
 
     const fetchPlace = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/places/${id}`);
-        if (!response.ok) throw new Error("Failed to fetch place");
-        const data = await response.json();
+        const data = await getSpace(id);
         if (!cancelled) setPlace(data);
       } catch (err) {
         if (!cancelled) setError((err as Error).message);
@@ -78,7 +78,7 @@ function Cards() {
                     )}
                   </div>
                 </div>
-                <p>{review.comment}</p>
+                <p>{review.content}</p>
                 <span>Rating: {review.rating}/5</span>
               </div>
             ))
