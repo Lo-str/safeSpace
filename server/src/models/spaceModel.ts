@@ -28,7 +28,7 @@ export type VenueType =
 //                    kids-welcome
 export type Tag = string;
 
-export interface Place {
+export interface Space {
   id: number;
   name: string;
   location: string;
@@ -66,16 +66,16 @@ const USERS: Record<string, { authorAvatar: string; authorPronouns: string }> = 
   Sam:     { authorAvatar: "https://api.dicebear.com/9.x/pixel-art/svg?seed=Sam",                                          authorPronouns: "they/them" },
 };
 
-const placeImage = (photoId: string) =>
+const spaceImage = (photoId: string) =>
   `https://images.unsplash.com/photo-${photoId}?auto=format&fit=crop&w=800&h=600&q=80`;
 
-export const places: Place[] = [
+export const spaces: Space[] = [
   {
     id: 1,
     name: "Central Cafe",
     location: "Malmö",
     description: "Cozy coffee place in the old town with a steady afternoon crowd.",
-    imageUrl: placeImage("1554118811-1e0d58224f24"),
+    imageUrl: spaceImage("1554118811-1e0d58224f24"),
     venueType: "cafe",
     tags: ["wheelchair-accessible", "step-free", "accessible-bathroom", "changing-table-all-genders", "high-chairs", "kids-welcome"],
     reviews: [
@@ -90,7 +90,7 @@ export const places: Place[] = [
     name: "Fitness Hub",
     location: "Lund",
     description: "Modern training center with a big free-weights area.",
-    imageUrl: placeImage("1534438327276-14e5300c3a48"),
+    imageUrl: spaceImage("1534438327276-14e5300c3a48"),
     venueType: "gym",
     tags: [],
     reviews: [
@@ -106,7 +106,7 @@ export const places: Place[] = [
     name: "Stonewall Strength",
     location: "Stockholm",
     description: "LGBTQIA+-owned strength gym in Södermalm. Coached lifts, no judgement, pronouns on staff lanyards, sliding-scale memberships.",
-    imageUrl: placeImage("1571902943202-507ec2618e8f"),
+    imageUrl: spaceImage("1571902943202-507ec2618e8f"),
     venueType: "gym",
     tags: ["lgbtq-owned", "trans-friendly", "sliding-scale"],
     reviews: [
@@ -122,7 +122,7 @@ export const places: Place[] = [
     name: "Saga Coffee House",
     location: "Göteborg",
     description: "Small sapphic-owned cafe near Linnéplatsen. Plants everywhere, vinyl on weekends.",
-    imageUrl: placeImage("1453614512568-c4024d13c247"),
+    imageUrl: spaceImage("1453614512568-c4024d13c247"),
     venueType: "cafe",
     tags: ["sapphic-owned", "lgbtq-affirming", "chest-feeding-friendly", "changing-table-all-genders", "high-chairs", "kids-welcome"],
     reviews: [
@@ -137,7 +137,7 @@ export const places: Place[] = [
     name: "Boulder Bee Studio",
     location: "Malmö",
     description: "Bouldering gym with a strong LGBTQIA+ and disability-inclusive climbing community. Adaptive routes set monthly; weekly beginner sessions.",
-    imageUrl: placeImage("1547036967-23d11aacaee0"),
+    imageUrl: spaceImage("1547036967-23d11aacaee0"),
     venueType: "gym",
     tags: ["lgbtq-affirming", "wheelchair-accessible", "adaptive-routes"],
     reviews: [
@@ -152,7 +152,7 @@ export const places: Place[] = [
     name: "Tango House",
     location: "Stockholm",
     description: "Dance studio teaching Argentine tango with traditional and same-sex milongas. No fixed lead/follow roles. Wheelchair-accessible floor.",
-    imageUrl: placeImage("1547153760-18fc86324498"),
+    imageUrl: spaceImage("1547153760-18fc86324498"),
     venueType: "studio",
     tags: ["lgbtq-affirming", "wheelchair-accessible"],
     reviews: [
@@ -167,7 +167,7 @@ export const places: Place[] = [
     name: "Sportbar Tre Kronor",
     location: "Göteborg",
     description: "Classic sports bar near the stadium. Beer on tap, every match on the screens.",
-    imageUrl: placeImage("1546726747-421c6d69c929"),
+    imageUrl: spaceImage("1546726747-421c6d69c929"),
     venueType: "bar",
     tags: [],
     reviews: [
@@ -182,7 +182,7 @@ export const places: Place[] = [
     name: "Northern CrossFit",
     location: "Lund",
     description: "CrossFit box with morning and evening classes. Welcomes all levels but expect a real workout.",
-    imageUrl: placeImage("1583454110551-21f2fa2afe61"),
+    imageUrl: spaceImage("1583454110551-21f2fa2afe61"),
     venueType: "gym",
     tags: [],
     reviews: [
@@ -197,7 +197,7 @@ export const places: Place[] = [
     name: "Stonewall Library",
     location: "Stockholm",
     description: "Public library with one of the largest LGBTQIA+ collections in the Nordics. Pronoun pins at the front desk, step-free entrance, large-print and audiobook options.",
-    imageUrl: placeImage("1481627834876-b7833e8f5570"),
+    imageUrl: spaceImage("1481627834876-b7833e8f5570"),
     venueType: "library",
     tags: ["lgbtq-affirming", "step-free", "automatic-doors", "large-print", "free-entry", "family-bathroom", "stroller-accessible", "kids-welcome", "changing-table-all-genders"],
     reviews: [
@@ -213,7 +213,7 @@ export const places: Place[] = [
     name: "The Common Stage",
     location: "Stockholm",
     description: "Community theatre in a converted warehouse. Cheap tickets, BYO snacks, productions that take risks. Captioned performances on Sundays.",
-    imageUrl: placeImage("1503095396549-807759245b35"),
+    imageUrl: spaceImage("1503095396549-807759245b35"),
     venueType: "theatre",
     tags: ["captions", "lgbtq-affirming"],
     reviews: [
@@ -228,7 +228,7 @@ export const places: Place[] = [
     name: "The Mira Hub",
     location: "Stockholm",
     description: "Co-working space in Vasastan with quiet desks, phone-booth rooms, pronouns on staff name badges, and a sensory-friendly hour every weekday morning.",
-    imageUrl: placeImage("1497366754035-f200968a6e72"),
+    imageUrl: spaceImage("1497366754035-f200968a6e72"),
     venueType: "coworking",
     tags: ["sensory-friendly", "wheelchair-accessible", "lgbtq-affirming"],
     reviews: [
@@ -243,7 +243,7 @@ export const places: Place[] = [
     name: "Folkbadet",
     location: "Malmö",
     description: "Public swimming hall with weekly trans-friendly hours, family changing rooms with private cubicles, working pool hoist, and larger swimsuits in stock.",
-    imageUrl: placeImage("1530549387789-4c1017266635"),
+    imageUrl: spaceImage("1530549387789-4c1017266635"),
     venueType: "pool",
     tags: ["trans-affirming", "pool-hoist", "wheelchair-accessible", "family-bathroom", "changing-table-all-genders", "stroller-accessible", "kids-welcome"],
     reviews: [
@@ -258,7 +258,7 @@ export const places: Place[] = [
     name: "Vinyl Lab Records",
     location: "Göteborg",
     description: "Independent record store with one of the best LGBTQIA+-music sections in Sweden. In-store shows on Tuesdays, signed releases by trans and disabled artists.",
-    imageUrl: placeImage("1483412033650-1015ddeb83d1"),
+    imageUrl: spaceImage("1483412033650-1015ddeb83d1"),
     venueType: "record-store",
     tags: ["lgbtq-affirming"],
     reviews: [
@@ -273,7 +273,7 @@ export const places: Place[] = [
     name: "Velvet Lounge",
     location: "Stockholm",
     description: "Cocktail bar in Södermalm with weekly drag nights and a famously good vermouth list.",
-    imageUrl: placeImage("1514933651103-005eec06c04b"),
+    imageUrl: spaceImage("1514933651103-005eec06c04b"),
     venueType: "bar",
     tags: ["lgbtq-affirming"],
     reviews: [
@@ -288,7 +288,7 @@ export const places: Place[] = [
     name: "Iron Garden",
     location: "Stockholm",
     description: "24/7 industrial-style gym in Hammarby Sjöstad. Mixed crowd, techno on the speakers, no mirrors in the free-weights area.",
-    imageUrl: placeImage("1591291621164-2c6367723315"),
+    imageUrl: spaceImage("1591291621164-2c6367723315"),
     venueType: "gym",
     tags: [],
     reviews: [
@@ -303,7 +303,7 @@ export const places: Place[] = [
     name: "Sober Sundays",
     location: "Malmö",
     description: "Alcohol-free bar and cafe in Möllevången with LGBT-friendly programming and mocktail flights.",
-    imageUrl: placeImage("1559925393-8be0ec4767c8"),
+    imageUrl: spaceImage("1559925393-8be0ec4767c8"),
     venueType: "cafe",
     tags: ["alcohol-free", "sober-friendly", "lgbtq-affirming"],
     reviews: [
@@ -318,7 +318,7 @@ export const places: Place[] = [
     name: "Pride Lift Club",
     location: "Stockholm",
     description: "LGBTQIA+ powerlifting club in Hägersten. Beginner-friendly intake, coached meets, women's and trans-only hours.",
-    imageUrl: placeImage("1540497077202-7c8a3999166f"),
+    imageUrl: spaceImage("1540497077202-7c8a3999166f"),
     venueType: "gym",
     tags: ["lgbtq-owned", "trans-friendly", "trans-affirming"],
     reviews: [
@@ -334,7 +334,7 @@ export const places: Place[] = [
     name: "The Locker Room",
     location: "Göteborg",
     description: "Old-school commercial gym near Avenyn. Loud, busy, lots of CrossFit-adjacent regulars.",
-    imageUrl: placeImage("1568901346375-23c9450c58cd"),
+    imageUrl: spaceImage("1568901346375-23c9450c58cd"),
     venueType: "gym",
     tags: [],
     reviews: [
@@ -349,7 +349,7 @@ export const places: Place[] = [
     name: "Estudio Verde",
     location: "Malmö",
     description: "Yoga studio near Möllevångstorget with an explicit body-positive, LGBTQIA+-affirming policy. Fat-friendly props and chair-yoga classes weekly.",
-    imageUrl: placeImage("1545205597-3d9d02c29597"),
+    imageUrl: spaceImage("1545205597-3d9d02c29597"),
     venueType: "studio",
     tags: ["lgbtq-affirming", "body-positive", "chest-feeding-friendly"],
     reviews: [
@@ -364,7 +364,7 @@ export const places: Place[] = [
     name: "Bar Provence",
     location: "Stockholm",
     description: "Classic wine bar in Östermalm. Tight list of French naturals, no-frills service.",
-    imageUrl: placeImage("1510812431401-41d2bd2722f3"),
+    imageUrl: spaceImage("1510812431401-41d2bd2722f3"),
     venueType: "bar",
     tags: [],
     reviews: [
@@ -378,7 +378,7 @@ export const places: Place[] = [
     name: "Café Bechdel",
     location: "Malmö",
     description: "Feminist and LGBT cafe in Möllevången. Books on the walls, zines on the counter, no laptops after 4pm.",
-    imageUrl: placeImage("1507842217343-583bb7270b66"),
+    imageUrl: spaceImage("1507842217343-583bb7270b66"),
     venueType: "cafe",
     tags: ["lgbtq-affirming", "women-owned", "chest-feeding-friendly", "changing-table-all-genders", "kids-welcome"],
     reviews: [
@@ -393,7 +393,7 @@ export const places: Place[] = [
     name: "Marais Coffee",
     location: "Stockholm",
     description: "Tiny espresso bar in Södermalm, named after Paris's gay quarter. Locals, tourists, drag queens between gigs.",
-    imageUrl: placeImage("1517022812141-23620dba5c23"),
+    imageUrl: spaceImage("1517022812141-23620dba5c23"),
     venueType: "cafe",
     tags: ["lgbtq-affirming"],
     reviews: [
@@ -407,7 +407,7 @@ export const places: Place[] = [
     name: "FlowMotion Yoga",
     location: "Göteborg",
     description: "Big multi-room yoga studio near Linnéplatsen. Vinyasa, yin, prenatal, and a weekly LGBT-led class.",
-    imageUrl: placeImage("1588286840104-8957b019727f"),
+    imageUrl: spaceImage("1588286840104-8957b019727f"),
     venueType: "studio",
     tags: ["lgbtq-affirming"],
     reviews: [
@@ -422,7 +422,7 @@ export const places: Place[] = [
     name: "Spike Volleyball Bar",
     location: "Göteborg",
     description: "Beach-volleyball-themed bar on Hisingen. Sand court out back, mostly straight crowd, lively atmosphere.",
-    imageUrl: placeImage("1592656094267-764a45160876"),
+    imageUrl: spaceImage("1592656094267-764a45160876"),
     venueType: "bar",
     tags: [],
     reviews: [
@@ -436,7 +436,7 @@ export const places: Place[] = [
     name: "Lavender Lifts",
     location: "Malmö",
     description: "LGBTQIA+-owned strength and conditioning gym in Värnhem. Coached only, small classes, sliding-scale membership.",
-    imageUrl: placeImage("1611162616305-c69b3fa7fbe0"),
+    imageUrl: spaceImage("1611162616305-c69b3fa7fbe0"),
     venueType: "gym",
     tags: ["lgbtq-owned", "sliding-scale", "trans-friendly"],
     reviews: [
@@ -452,7 +452,7 @@ export const places: Place[] = [
     name: "Solidaridad Kitchen",
     location: "Stockholm",
     description: "Latin American restaurant in Skanstull run by an LGBT couple. Ceviche, arepas, and a Pride flag behind the bar.",
-    imageUrl: placeImage("1565299624946-b28f40a0ae38"),
+    imageUrl: spaceImage("1565299624946-b28f40a0ae38"),
     venueType: "restaurant",
     tags: ["lgbtq-owned", "bipoc-owned", "high-chairs", "kids-welcome"],
     reviews: [
@@ -467,7 +467,7 @@ export const places: Place[] = [
     name: "Page & Pride Bookstore",
     location: "Uppsala",
     description: "Independent LGBT bookstore in central Uppsala with a curated rainbow children's section and a weekly poetry night.",
-    imageUrl: placeImage("1521587760476-6c12a4b040da"),
+    imageUrl: spaceImage("1521587760476-6c12a4b040da"),
     venueType: "bookstore",
     tags: ["lgbtq-owned", "lgbtq-affirming", "chest-feeding-friendly", "family-bathroom", "kids-welcome"],
     reviews: [
@@ -482,7 +482,7 @@ export const places: Place[] = [
     name: "Cinéma du Coin",
     location: "Stockholm",
     description: "Two-screen arthouse cinema in Vasastan. Monthly LGBT film festival, captioned screenings, and a small bar in the lobby.",
-    imageUrl: placeImage("1489599849927-2ee91cede3ba"),
+    imageUrl: spaceImage("1489599849927-2ee91cede3ba"),
     venueType: "cinema",
     tags: ["captions", "lgbtq-affirming"],
     reviews: [
@@ -497,7 +497,7 @@ export const places: Place[] = [
     name: "Pride Health",
     location: "Stockholm",
     description: "LGBTQIA+-affirming community health clinic in Telefonplan. GP services, free STI testing, trans-affirming care, trauma-informed staff.",
-    imageUrl: placeImage("1576091160399-112ba8d25d1d"),
+    imageUrl: spaceImage("1576091160399-112ba8d25d1d"),
     venueType: "clinic",
     tags: ["lgbtq-affirming", "trans-affirming", "wheelchair-accessible"],
     reviews: [
@@ -513,7 +513,7 @@ export const places: Place[] = [
     name: "Studio Trim",
     location: "Stockholm",
     description: "Gender-neutral hair salon in Södermalm. Flat-rate pricing by service, not by gender. No assumptions made at the chair.",
-    imageUrl: placeImage("1562322140-8baeececf3df"),
+    imageUrl: spaceImage("1562322140-8baeececf3df"),
     venueType: "salon",
     tags: ["lgbtq-affirming", "trans-affirming"],
     reviews: [
@@ -528,7 +528,7 @@ export const places: Place[] = [
     name: "House of Glitter",
     location: "Stockholm",
     description: "LGBTQIA+ nightclub at Slussen. Mixed-night programming, gender-neutral bathrooms, step-free entrance, door staff that genuinely watch out for you.",
-    imageUrl: placeImage("1545128485-c400e7702796"),
+    imageUrl: spaceImage("1545128485-c400e7702796"),
     venueType: "nightclub",
     tags: ["lgbtq-affirming", "wheelchair-accessible", "step-free"],
     reviews: [
@@ -543,7 +543,7 @@ export const places: Place[] = [
     name: "Modern Art Forum",
     location: "Göteborg",
     description: "Small contemporary art gallery focused on LGBT and diaspora artists. Free entry on first Thursdays. Sensory-friendly viewing hours twice a month.",
-    imageUrl: placeImage("1531058020387-3be344556be6"),
+    imageUrl: spaceImage("1531058020387-3be344556be6"),
     venueType: "gallery",
     tags: ["lgbtq-affirming", "bipoc-affirming", "sensory-friendly", "free-entry", "stroller-accessible", "kids-welcome"],
     reviews: [
@@ -558,7 +558,7 @@ export const places: Place[] = [
     name: "Sankt Hans Park",
     location: "Lund",
     description: "Large urban park that hosts LGBT skate meets, summer drag picnics, and a weekly community market.",
-    imageUrl: placeImage("1500382017468-9049fed747ef"),
+    imageUrl: spaceImage("1500382017468-9049fed747ef"),
     venueType: "park",
     tags: ["lgbtq-affirming", "free-entry", "stroller-accessible", "kids-welcome", "family-bathroom"],
     reviews: [
@@ -573,7 +573,7 @@ export const places: Place[] = [
     name: "La Cantine",
     location: "Göteborg",
     description: "LGBT-owned bistro near Linnéplatsen. Lyonnaise classics, a thoughtful vegan option, two-hour dinners welcome.",
-    imageUrl: placeImage("1517248135467-4c7edcad34c4"),
+    imageUrl: spaceImage("1517248135467-4c7edcad34c4"),
     venueType: "restaurant",
     tags: ["lgbtq-owned", "high-chairs", "kids-welcome", "family-bathroom"],
     reviews: [
@@ -588,7 +588,7 @@ export const places: Place[] = [
     name: "Rainbow Hostel",
     location: "Stockholm",
     description: "LGBTQ+ hostel near Centralen. Gender-inclusive dorm option, weekly LGBT mixers in the common room.",
-    imageUrl: placeImage("1568495248636-6432b97bd949"),
+    imageUrl: spaceImage("1568495248636-6432b97bd949"),
     venueType: "hostel",
     tags: ["lgbtq-owned", "lgbtq-affirming"],
     reviews: [

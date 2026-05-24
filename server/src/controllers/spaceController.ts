@@ -1,35 +1,35 @@
 import { type Request, type Response } from "express";
 import { prisma } from "../prismaClient.js";
 
-export const getPlaces = async (req: Request, res: Response): Promise<void> => {
-  const places = await prisma.place.findMany();
+export const getSpaces = async (req: Request, res: Response): Promise<void> => {
+  const places = await prisma.space.findMany();
   res.status(200).json(places);
 };
 
-export const getSinglePlace = async (
+export const getSingleSpace = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   const id = req.params.id;
 
   if (!id || Array.isArray(id)) {
-    res.status(400).json({ message: "Invalid place id" });
+    res.status(400).json({ message: "Invalid space id" });
     return;
   }
 
-  const place = await prisma.place.findUnique({
+  const place = await prisma.space.findUnique({
     where: { id },
   });
 
   if (!place) {
-    res.status(404).json({ message: "Place not found" });
+    res.status(404).json({ message: "Space not found" });
     return;
   }
 
   res.status(200).json(place);
 };
 
-export const createNewPlace = async (
+export const createNewSpace = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
@@ -42,7 +42,7 @@ export const createNewPlace = async (
     return;
   }
 
-  const newPlace = await prisma.place.create({
+  const newSpace = await prisma.space.create({
     data: {
       name,
       location,
@@ -52,10 +52,10 @@ export const createNewPlace = async (
     },
   });
 
-  res.status(201).json(newPlace);
+  res.status(201).json(newSpace);
 };
 
-export const updatePlace = async (
+export const updateSpace = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
@@ -63,39 +63,39 @@ export const updatePlace = async (
   const updates = req.body as Record<string, unknown>;
 
   if (!id || Array.isArray(id)) {
-    res.status(400).json({ message: "Invalid place id" });
+    res.status(400).json({ message: "Invalid space id" });
     return;
   }
 
   try {
-    const updatedPlace = await prisma.place.update({
+    const updatedSpace = await prisma.space.update({
       where: { id },
       data: updates,
     });
-    res.status(200).json(updatedPlace);
+    res.status(200).json(updatedSpace);
   } catch (error) {
-    res.status(404).json({ message: "Place not found or invalid update data" });
+    res.status(404).json({ message: "Space not found or invalid update data" });
   }
 };
 
-export const deletePlace = async (
+export const deleteSpace = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   const id = req.params.id;
 
   if (!id || Array.isArray(id)) {
-    res.status(400).json({ message: "Invalid place id" });
+    res.status(400).json({ message: "Invalid space id" });
     return;
   }
 
   try {
-    await prisma.place.delete({
+    await prisma.space.delete({
       where: { id },
     });
     res.status(204).send();
   } catch (error) {
-    res.status(404).json({ message: "Place not found" });
+    res.status(404).json({ message: "Space not found" });
   }
 };
 
@@ -107,7 +107,7 @@ export const createReview = async (
   const spaceId = req.params.id;
 
   if (!spaceId || Array.isArray(spaceId)) {
-    res.status(400).json({ message: "Invalid place id" });
+    res.status(400).json({ message: "Invalid space id" });
     return;
   }
 
@@ -135,7 +135,7 @@ export const createReview = async (
   } catch (error) {
     res.status(400).json({
       message:
-        "Unable to create review. Make sure the place exists and any provided userId is valid.",
+        "Unable to create review. Make sure the space exists and any provided userId is valid.",
     });
   }
 };

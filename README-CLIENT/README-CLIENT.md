@@ -198,6 +198,6 @@ src/
 ├── main.tsx
 └── .github/
     └── workflows/
-        ├── Run-test.yml (backend)
+        ├── Run-test.yml (server)
         └── frontend-test.yml (frontend)
 ```

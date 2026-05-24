@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import profileRoutes from "./routes/profileRoutes";
-import placeRoutes from "./routes/placeRoutes";
+import spaceRoutes from "./routes/spaceRoutes";
 import userRoutes from "./routes/userRoutes";
 import reviewRoutes from "./routes/reviewRoutes";
 import ratingRoutes from "./routes/ratingRoutes";
@@ -32,14 +32,13 @@ app.use(
 app.use(express.json());
 
 app.use("/profile", profileRoutes);
-app.use("/places", placeRoutes);
 app.use(
-  "/gyms",
+  "/spaces",
   (req, res, next) => {
     if (req.method === "POST") return requireAuth(req, res, next);
     next();
   },
-  placeRoutes,
+  spaceRoutes,
 );
 
 app.use("/users", userRoutes);

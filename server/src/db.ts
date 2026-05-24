@@ -1,7 +1,7 @@
 /**
- * Mock database — replaces placeModel.ts.
+ * Mock database — replaces spaceModel.ts.
  * Types mirror the Prisma schema exactly.
- * Place/User carry a few UI-only extras (venueType, imageUrl, tags, pronouns,
+ * Space/User carry a few UI-only extras (venueType, imageUrl, tags, pronouns,
  * avatar) that will need to be added to schema.prisma before switching to a
  * real database.
  */
@@ -25,7 +25,7 @@ export interface User {
   updatedAt: Date;
 }
 
-export interface Place {
+export interface Space {
   id: string;
   name: string;
   description: string | null;
@@ -194,9 +194,9 @@ export const locations: Location[] = [
   { id: "loc-5", name: "Uppsala",   createdAt: D, updatedAt: D },
 ];
 
-// ─── Places ───────────────────────────────────────────────────────────────────
+// ─── Spaces ───────────────────────────────────────────────────────────────────
 
-export const places: Place[] = [
+export const spaces: Space[] = [
   {
     id: "place-1", name: "Central Cafe", location: "Malmö", price: 45,
     userId: "user-owner",
@@ -662,9 +662,9 @@ export const reviews: Review[] = [
   { id: "rev-35-4", spaceId: "place-35", userId: "user-nadia",   rating: 3, content: "Wifi is bad and bathrooms are shared. For the price and the community though, I'd come back tomorrow.", createdAt: D, updatedAt: D },
 ];
 
-// ─── Media (one hero image per place) ────────────────────────────────────────
+// ─── Media (one hero image per space) ────────────────────────────────────────
 
-export const media: Media[] = places
+export const media: Media[] = spaces
   .filter((p) => p.imageUrl)
   .map((p, i) => ({
     id: `media-${i + 1}`,
