@@ -1,0 +1,38 @@
+# Render Blueprint — provisions Postgres + backend Web Service in one go.
+# Apply via: Render Dashboard → New → Blueprint → point at this repo.
+# Docs: https://render.com/docs/blueprint-spec
+
+databases:
+  - name: safespace-db
+    plan: free
+    databaseName: safespace
+    user: safespace
+    region: frankfurt
+
+services:
+  - type: web
+    name: safespace-server
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    plan: free
+    region: frankfurt
+    branch: main
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      # Auto-wired from the managed Postgres above
+      - key: DATABASE_URL
+        fromDatabase:
+          name: safespace-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      # Set these manually in the Render dashboard after first deploy:
+      - key: AUTH0_AUDIENCE
+        sync: false
+      - key: AUTH0_ISSUER_BASE_URL
+        sync: false
+      # Update CLIENT_ORIGIN with the Vercel URL once the frontend is deployed:
+      - key: CLIENT_ORIGIN
+        sync: false

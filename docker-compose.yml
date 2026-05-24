@@ -9,7 +9,9 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      # Host 5433 to avoid clash with system Postgres on 5432.
+      # Container-internal port stays 5432 so other services connect via `db:5432`.
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-safespace} -d ${POSTGRES_DB:-safespace}"]
       interval: 5s
@@ -31,9 +33,15 @@ services:
         condition: service_healthy
     ports:
       - "4000:4000"
-    # For local dev, push the Prisma schema before starting the server.
-    # In production (Render), use `prisma migrate deploy` against a managed DB instead.
-    command: sh -c "npx prisma db push --skip-generate --accept-data-loss && node dist/server.js"
+    # Apply pending migrations on start, then launch the server.
+    # Same command runs in production (Render).
+    command: sh -c "npx prisma migrate deploy && node dist/server.js"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
 
   client:
     build:

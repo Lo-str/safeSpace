@@ -38,4 +38,10 @@ COPY --from=builder /app/dist ./dist
 USER node
 
 EXPOSE 4000
-CMD ["node", "dist/server.js"]
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD node -e "fetch('http://localhost:4000/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+
+# Apply migrations before serving traffic. `prisma migrate deploy` is idempotent
+# and safe to run on every container start, including Render restarts.
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.js"]
