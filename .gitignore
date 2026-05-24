@@ -10,5 +10,4 @@ dist/
 backend/.env
 /src/generated/prisma
 
-# AI/Tooling Configs
-.claude/
+debugging.md
