@@ -2,7 +2,9 @@ import { type Request, type Response } from "express";
 import { prisma } from "../prismaClient.js";
 
 export const getSpaces = async (req: Request, res: Response): Promise<void> => {
-  const places = await prisma.space.findMany();
+  const places = await prisma.space.findMany({
+    include: { reviews: true },
+  });
   res.status(200).json(places);
 };
 
@@ -19,6 +21,7 @@ export const getSingleSpace = async (
 
   const place = await prisma.space.findUnique({
     where: { id },
+    include: { reviews: true },
   });
 
   if (!place) {

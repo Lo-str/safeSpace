@@ -3,21 +3,22 @@ import { Link, useSearchParams } from "react-router-dom";
 import { PacmanLoader } from "react-spinners";
 import "./Browse.css";
 import StarRating, { averageRating } from "../../components/StarRating";
+import { getSpaces } from "../../services/api";
 
 interface Review {
-  id: number;
+  id: string;
   rating: number;
 }
 
 interface Place {
-  id: number;
+  id: string;
   name: string;
   location: string;
   description?: string;
   imageUrl?: string;
-  venueType: string;
-  tags: string[];
-  reviews: Review[];
+  venueType?: string;
+  tags?: string[];
+  reviews?: Review[];
 }
 
 const VENUE_TYPE_LABELS: Record<string, string> = {
@@ -134,10 +135,8 @@ function Browse() {
     const fetchPlaces = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/places");
-        if (!response.ok) throw new Error("Failed to fetch places");
-        const data = await response.json();
-        setPlaces(data);
+        const data = await getSpaces();
+        setPlaces(data as Place[]);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Unknown error");
       } finally {

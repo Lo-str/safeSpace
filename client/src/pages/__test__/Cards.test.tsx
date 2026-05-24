@@ -81,8 +81,8 @@ describe("Cards Page", () => {
       name: "Queer Community Center",
       location: "Stockholm",
       reviews: [
-        { id: 1, comment: "Great place!", rating: 5 },
-        { id: 2, comment: "Very welcoming", rating: 4 },
+        { id: 1, content: "Great place!", rating: 5 },
+        { id: 2, content: "Very welcoming", rating: 4 },
       ],
     };
     vi.mocked(fetch).mockResolvedValue({

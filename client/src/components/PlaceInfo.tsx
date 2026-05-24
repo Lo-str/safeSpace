@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ReviewForm from "../components/ReviewForm/ReviewForm";
 import StarRating, { averageRating } from "./StarRating";
+import { getSpace } from "../services/api";
 
 function PlaceInfo() {
   const { id } = useParams();
@@ -10,15 +11,14 @@ function PlaceInfo() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!id) return;
     const fetchPlace = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/places/${id}`);
-        if (!response.ok) throw new Error("Failed to find data");
-        const data = await response.json();
+        const data = await getSpace(id);
         setPlace(data);
       } catch (error) {
-        setError(error.message);
+        setError(error instanceof Error ? error.message : "Failed to find data");
       } finally {
         setLoading(false);
       }

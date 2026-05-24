@@ -76,12 +76,14 @@ describe("ReviewForm Component", () => {
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining(`/places/${mockPlaceId}/reviews`),
+        expect.stringContaining(`/spaces/${mockPlaceId}/reviews`),
         expect.objectContaining({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: expect.objectContaining({
+            "Content-Type": "application/json",
+            Authorization: "Bearer mock-token",
+          }),
           body: JSON.stringify({
-            author: "Test User",
             rating: 5,
             comment: "Great place!",
           }),
@@ -90,7 +92,7 @@ describe("ReviewForm Component", () => {
     });
   });
 
-  it("uses the Auth0 user name as the author when authenticated", async () => {
+  it("sends a bearer token from Auth0 when submitting", async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({}),
@@ -105,9 +107,11 @@ describe("ReviewForm Component", () => {
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining(`/places/${mockPlaceId}/reviews`),
+        expect.stringContaining(`/spaces/${mockPlaceId}/reviews`),
         expect.objectContaining({
-          body: expect.stringContaining('"author":"Test User"'),
+          headers: expect.objectContaining({
+            Authorization: "Bearer mock-token",
+          }),
         }),
       );
     });

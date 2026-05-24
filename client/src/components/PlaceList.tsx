@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { PacmanLoader } from "react-spinners";
+import { getSpaces } from "../services/api";
 
 function PlaceList() {
   const [places, setPlaces] = useState([]);
@@ -11,9 +12,7 @@ function PlaceList() {
     const fetchPlaces = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/places");
-        if (!response.ok) throw new Error("Failed to fetch places");
-        const data = await response.json();
+        const data = await getSpaces();
         setPlaces(data);
       } catch (error) {
         setError(error instanceof Error ? error.message : "Unknown error");
