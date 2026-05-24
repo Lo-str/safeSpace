@@ -17,7 +17,14 @@ import requireAuth from "./middleware/authMiddleware";
 import errorMiddleware from "./middleware/errorMiddleware";
 
 const app = express();
-const clientOrigin = process.env.CLIENT_ORIGIN ?? "http://localhost:5173";
+
+// CLIENT_ORIGIN can be a single origin or a comma-separated list (no spaces
+// required around commas). Used to allow both local dev and the deployed
+// frontend without code changes.
+const allowedOrigins = (process.env.CLIENT_ORIGIN ?? "http://localhost:5173")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
 
 app.disable("x-powered-by");
 
@@ -27,7 +34,7 @@ app.get("/health", (_req, res) => {
 
 app.use(
   cors({
-    origin: clientOrigin,
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

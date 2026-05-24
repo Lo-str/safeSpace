@@ -224,3 +224,75 @@ Server typecheck (`cd server && npm run typecheck`) also clean.
 - Vercel deploy: set `VITE_API_BASE_URL=https://<render-url>.onrender.com` and the four `VITE_AUTH0_*` env vars
 - Update Auth0 application's Allowed Callback / Logout / Web Origin URLs to include the Vercel URL
 - Update Render's `CLIENT_ORIGIN` env var to the Vercel URL
+
+---
+
+## Branch `feature/deploy-frontend` — Phase 3 (Vercel Deploy)
+
+**Scope:** prep the frontend for Vercel and the backend for multi-origin CORS. Branched off `main` after `fix/frontendApi` was merged (PR #2, commit `bdbe83f`).
+
+### Files created
+
+**[client/vercel.json](client/vercel.json)** (27 lines) — Vercel project config
+
+- Lines 3-6: framework `vite`, `npm run build` → `dist/`
+- Lines 8-10: SPA rewrite — every path falls back to `/index.html` so React Router handles `/places/:id`, `/profile`, etc. on direct load and refresh
+- Lines 11-29: HTTP headers — 1-year immutable cache on `/assets/*` (Vite hashed assets); security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`) on every response
+
+### Files modified
+
+**[server/src/app.ts](server/src/app.ts) lines 20-26** — CORS multi-origin support
+
+- Was: single `clientOrigin = process.env.CLIENT_ORIGIN ?? "http://localhost:5173"`
+- Now: `allowedOrigins` parsed as comma-separated list, trimmed, empties filtered. `cors({ origin: allowedOrigins })` — express's cors package handles array-of-strings matching natively. Strict whitelist, no wildcards
+- Same env var still works for single-origin local dev (`http://localhost:5173`). Production sets it to `http://localhost:5173,https://<vercel-url>.vercel.app` (or just the Vercel URL)
+
+**[client/src/App.tsx](client/src/App.tsx) line 25** — added `audience` to `Auth0Provider`
+
+- Critical fix: without `audience`, Auth0 returns an **opaque token** instead of a JWT, and the backend's `express-oauth2-jwt-bearer` would reject every authenticated request with 401. This wasn't biting yet because the deployed app didn't exist
+- Reads from `VITE_AUTH0_AUDIENCE` (same value as backend's `AUTH0_AUDIENCE`)
+
+**[.env.example](.env.example) lines 11-13** — documented the comma-separated `CLIENT_ORIGIN` format with a production example
+
+**[render.yaml](render.yaml) lines 32-34** — comment updated to reflect that `CLIENT_ORIGIN` is a comma-separated allow-list
+
+### What you do manually now (Phase 3 action items)
+
+1. **Sign in to Vercel** → New Project → import the GitHub repo
+2. **Vercel project settings:**
+   - **Root Directory:** `client` (so Vercel uses `client/vercel.json` and `client/package.json`)
+   - **Framework Preset:** auto-detects Vite from vercel.json
+   - **Environment Variables** (Production scope at minimum):
+     - `VITE_API_BASE_URL=https://<your-render-url>.onrender.com`
+     - `VITE_AUTH0_DOMAIN=dev-lu7agu65f2o4db23.eu.auth0.com`
+     - `VITE_AUTH0_CLIENT_ID=hXgRJV0rPyzqr0ux29LC8ATkFkRqCyC0`
+     - `VITE_AUTH0_AUDIENCE=https://safe-space-api`
+3. **Deploy** — first build will produce a `*.vercel.app` URL
+4. **Auth0 dashboard** → Application "Safe Space" → Settings → Application URIs. Add the Vercel URL to all four (comma-separated alongside `http://localhost:5173`):
+   - Allowed Callback URLs
+   - Allowed Logout URLs
+   - Allowed Web Origins
+   - Allowed Origins (CORS)
+   - Save
+5. **Render dashboard** → safespace-server → Environment → set/update:
+   - `CLIENT_ORIGIN=http://localhost:5173,https://<your-vercel-url>.vercel.app`
+   - Render auto-redeploys
+6. **End-to-end smoke test on the deployed URLs:**
+   - Visit `https://<vercel-url>.vercel.app/places` → should fetch from Render and show the (currently empty) Browse page
+   - Click Login → should redirect to Auth0 → log in → bounce back
+   - Submit a review on a space → should hit `POST /spaces/:id/reviews` on Render with a valid bearer token → success
+
+### Verification of code changes (local)
+
+```bash
+cd /home/lo/safeSpace/client
+npm test -- --run            # 30/30 pass
+cd ../server
+npm run typecheck            # clean
+```
+
+### Known limitations / what Phase 4 will address
+
+- Auth0 SDK still uses default in-memory cache. Phase 4 will explicitly set `cacheLocation` and consider `useRefreshTokens` per the assignment's "no localStorage" requirement
+- No `withCredentials: true` on the api.ts helpers — currently fine because we use bearer tokens, not cookies. Phase 4 will revisit if we switch any flow to cookies
+- The two CI workflows ([.github/workflows/test.yml](.github/workflows/test.yml) and [.github/workflows/frontend-test.yml](.github/workflows/frontend-test.yml)) still exist as two files — Phase 6 will consolidate

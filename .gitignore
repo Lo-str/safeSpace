@@ -12,3 +12,4 @@ backend/.env
 
 # AI/Tooling Configs
 .claude/
+debugging.md
