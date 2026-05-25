@@ -1,6 +1,6 @@
 # Safe Space — Final Assignment Deliverable
 
-This file collects everything the final deployment assignment requires of the README: install / run / test instructions, Docker instructions, deployed URLs, the security checklist with reasoning, and the 5 reflection questions answered. The two earlier per-service READMEs ([`README_SERVER/`](README_SERVER/README.md) and [`README-CLIENT/`](README-CLIENT/README-CLIENT.md)) are kept as-is from the previous module.
+This file collects everything the final deployment assignment requires of the README: install / run / test instructions, Docker instructions, deployed URLs, the security checklist with reasoning, and the 5 reflection questions answered. The two earlier per-service READMEs ([`README_SERVER/`](../PROJECTPART1/README_SERVER/README_SERVER.md) and [`README-CLIENT/`](../PROJECTPART1/README-CLIENT/README-CLIENT.md)) are kept as-is from the previous module.
 
 ---
 
@@ -27,12 +27,12 @@ This file collects everything the final deployment assignment requires of the RE
 
 ### Option A — without Docker (per-service)
 
-1. Copy [`server/.env.example`](server/.env.example) → `server/.env` and fill in:
+1. Copy [`server/.env.example`](../../server/.env.example) → `server/.env` and fill in:
    - `DATABASE_URL` (e.g. `postgresql://safespace:safespace@localhost:5433/safespace`)
    - `AUTH0_AUDIENCE`
    - `AUTH0_ISSUER_BASE_URL` (must end with `/`)
    - `CLIENT_ORIGIN=http://localhost:5173`
-2. Copy [`client/.env.example`](client/.env.example) → `client/.env` and fill in `VITE_API_BASE_URL` + the three `VITE_AUTH0_*` values.
+2. Copy [`client/.env.example`](../../client/.env.example) → `client/.env` and fill in `VITE_API_BASE_URL` + the three `VITE_AUTH0_*` values.
 3. Make sure a Postgres instance is reachable (either local or `docker compose up -d db`).
 4. Install, migrate, run:
 
@@ -51,7 +51,7 @@ cd server && npm run typecheck
 
 ### Option B — with Docker (full stack)
 
-1. Copy [`.env.example`](.env.example) → `.env` at the repo root and fill in Auth0 + Postgres values.
+1. Copy [`.env.example`](../../.env.example) → `.env` at the repo root and fill in Auth0 + Postgres values.
 2. From the repo root:
 
 ```bash
@@ -69,7 +69,7 @@ Brings up:
 
 ### Server image only
 
-Multi-stage Alpine build, runs as the non-root `node` user. See [`server/Dockerfile`](server/Dockerfile).
+Multi-stage Alpine build, runs as the non-root `node` user. See [`server/Dockerfile`](../../server/Dockerfile).
 
 ```bash
 docker build -t safespace-server ./server
@@ -85,7 +85,7 @@ The container's `CMD` runs `npx prisma migrate deploy && node dist/server.js`, s
 
 ### Client image only
 
-Two-stage: Node 22 Alpine builds Vite, then `nginx:alpine` serves the static `dist/`. See [`client/Dockerfile`](client/Dockerfile).
+Two-stage: Node 22 Alpine builds Vite, then `nginx:alpine` serves the static `dist/`. See [`client/Dockerfile`](../../client/Dockerfile).
 
 ```bash
 docker build -t safespace-client \
@@ -98,7 +98,7 @@ docker build -t safespace-client \
 docker run --rm -p 8080:80 safespace-client
 ```
 
-Vite envs are passed as `--build-arg` because Vite bakes them at build time. The nginx config ([`client/nginx.conf`](client/nginx.conf)) adds an SPA fallback (so React Router routes resolve on direct load), a 1-year cache on hashed assets, and `X-Content-Type-Options` / `X-Frame-Options` / `Referrer-Policy` headers.
+Vite envs are passed as `--build-arg` because Vite bakes them at build time. The nginx config ([`client/nginx.conf`](../../client/nginx.conf)) adds an SPA fallback (so React Router routes resolve on direct load), a 1-year cache on hashed assets, and `X-Content-Type-Options` / `X-Frame-Options` / `Referrer-Policy` headers.
 
 ### Full stack via compose
 
@@ -139,27 +139,27 @@ Each item from the assignment's production security checklist, with the actual d
 
 ### 1. No secrets in the repository
 
-All secrets live in gitignored `.env` files or the Render / Vercel dashboards. The repo only contains `.env.example` templates that document the variable shape. CI uses GitHub Secrets in [`.github/workflows/test.yml`](.github/workflows/test.yml). [`server/.dockerignore`](server/.dockerignore) and [`client/.dockerignore`](client/.dockerignore) exclude every `.env*` from the Docker build context so secrets can't end up baked into images.
+All secrets live in gitignored `.env` files or the Render / Vercel dashboards. The repo only contains `.env.example` templates that document the variable shape. CI uses GitHub Secrets in [`.github/workflows/test.yml`](../../.github/workflows/test.yml). [`server/.dockerignore`](../../server/.dockerignore) and [`client/.dockerignore`](../../client/.dockerignore) exclude every `.env*` from the Docker build context so secrets can't end up baked into images.
 
 ### 2. CORS is restricted to the deployed frontend URL
 
-[`server/src/app.ts`](server/src/app.ts) parses `CLIENT_ORIGIN` as a comma-separated allow-list and hands the array to `cors()`. No wildcards. Production sets exactly the Vercel URL (plus localhost when we want to test the local frontend against the prod backend). Anything else is rejected at the browser preflight.
+[`server/src/app.ts`](../../server/src/app.ts) parses `CLIENT_ORIGIN` as a comma-separated allow-list and hands the array to `cors()`. No wildcards. Production sets exactly the Vercel URL (plus localhost when we want to test the local frontend against the prod backend). Anything else is rejected at the browser preflight.
 
 ### 3. Tokens are never stored in `localStorage`
 
-[`client/src/App.tsx`](client/src/App.tsx) configures `Auth0Provider` with `cacheLocation="memory"` and `useRefreshTokens={false}`. Access tokens live only in JavaScript memory and are wiped on page refresh — a new one is fetched silently via the Auth0 session cookie on the Auth0 domain, never via our domain. We avoid refresh tokens because storing them durably would mean either `localStorage` (rejected by this checklist) or backend-managed cookies plus CSRF defenses we don't need for this app's session length.
+[`client/src/App.tsx`](../../client/src/App.tsx) configures `Auth0Provider` with `cacheLocation="memory"` and `useRefreshTokens={false}`. Access tokens live only in JavaScript memory and are wiped on page refresh — a new one is fetched silently via the Auth0 session cookie on the Auth0 domain, never via our domain. We avoid refresh tokens because storing them durably would mean either `localStorage` (rejected by this checklist) or backend-managed cookies plus CSRF defenses we don't need for this app's session length.
 
 ### 4. `withCredentials: true` is used on all authenticated frontend requests
 
-Every fetch in [`client/src/services/api.ts`](client/src/services/api.ts) sets `credentials: "include"`. The matching server-side flag is `credentials: true` in the `cors()` config, scoped to the same allow-list as item 2. We use Bearer tokens (Auth0 SPA flow) rather than session cookies, so the flag is technically a no-op today — but it's included for strict compliance and so any future cookie-based flow works without further client changes.
+Every fetch in [`client/src/services/api.ts`](../../client/src/services/api.ts) sets `credentials: "include"`. The matching server-side flag is `credentials: true` in the `cors()` config, scoped to the same allow-list as item 2. We use Bearer tokens (Auth0 SPA flow) rather than session cookies, so the flag is technically a no-op today — but it's included for strict compliance and so any future cookie-based flow works without further client changes.
 
 ### 5. Docker image does not contain `.env` files or `node_modules` from host
 
-[`server/.dockerignore`](server/.dockerignore) and [`client/.dockerignore`](client/.dockerignore) exclude `node_modules`, every `.env*` file, build outputs, tests, logs, and git metadata from the build context. Dependencies install fresh inside the builder stage from `package-lock.json`, so nothing leaks from the developer's machine. The multi-stage layout also discards build tooling (esbuild, Prisma CLI dev pieces) from the final runtime image.
+[`server/.dockerignore`](../../server/.dockerignore) and [`client/.dockerignore`](../../client/.dockerignore) exclude `node_modules`, every `.env*` file, build outputs, tests, logs, and git metadata from the build context. Dependencies install fresh inside the builder stage from `package-lock.json`, so nothing leaks from the developer's machine. The multi-stage layout also discards build tooling (esbuild, Prisma CLI dev pieces) from the final runtime image.
 
 ### 6. The deployed backend uses HTTPS
 
-Render terminates TLS at its load balancer for every Web Service — there's no opt-in. We also call `helmet()` in [`server/src/app.ts`](server/src/app.ts) which adds `Strict-Transport-Security` (HSTS) so browsers refuse to downgrade. Helmet's defaults also cover `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and the Cross-Origin-* family.
+Render terminates TLS at its load balancer for every Web Service — there's no opt-in. We also call `helmet()` in [`server/src/app.ts`](../../server/src/app.ts) which adds `Strict-Transport-Security` (HSTS) so browsers refuse to downgrade. Helmet's defaults also cover `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and the Cross-Origin-* family.
 
 ### 7. Authentication callbacks use the deployed URL, not localhost
 
@@ -171,7 +171,7 @@ The Auth0 SPA application's Allowed Callback / Logout / Web Origin / CORS Origin
 
 ### 1. Why did you choose this deployment platform? What were the alternatives you considered?
 
-Render + Vercel is the assignment's recommended stack and we had no reason to deviate. Render gives us a managed Postgres on the same provider as the backend (low latency, one dashboard), [`render.yaml`](render.yaml) for Infrastructure-as-Code, and free TLS. Vercel auto-detects Vite, has zero-config SPA rewrites via [`client/vercel.json`](client/vercel.json), and a generous free tier. Alternatives we briefly considered: **Railway** (nicer DX but the $5/month free credit can run out mid-grading), **Fly.io** (better global distribution but a steeper learning curve via `fly.toml`), **Netlify** / **Cloudflare Pages** (excellent for static sites but weaker Docker support for the backend), **DigitalOcean App Platform** (more of a generalist).
+Render + Vercel is the assignment's recommended stack and we had no reason to deviate. Render gives us a managed Postgres on the same provider as the backend (low latency, one dashboard), [`render.yaml`](../../render.yaml) for Infrastructure-as-Code, and free TLS. Vercel auto-detects Vite, has zero-config SPA rewrites via [`client/vercel.json`](../../client/vercel.json), and a generous free tier. Alternatives we briefly considered: **Railway** (nicer DX but the $5/month free credit can run out mid-grading), **Fly.io** (better global distribution but a steeper learning curve via `fly.toml`), **Netlify** / **Cloudflare Pages** (excellent for static sites but weaker Docker support for the backend), **DigitalOcean App Platform** (more of a generalist).
 
 ### 2. What challenges did you face with Docker? How did you solve them?
 
@@ -188,10 +188,10 @@ Smaller ones: Vite envs must be passed as `--build-arg` because they're baked at
 Three layers, each with a single source of truth:
 
 - **Per-service `.env`** (`server/.env`, `client/.env`) for non-Docker local dev — gitignored.
-- **Root `.env`** consumed by `docker-compose` for full-stack local dev — also gitignored. Mirrors the per-service values plus Postgres credentials. Copy from [`.env.example`](.env.example).
+- **Root `.env`** consumed by `docker-compose` for full-stack local dev — also gitignored. Mirrors the per-service values plus Postgres credentials. Copy from [`.env.example`](../../.env.example).
 - **Hosting dashboards** in production: Render for the backend (`AUTH0_*`, `CLIENT_ORIGIN`, `DATABASE_URL` auto-wired), Vercel for the frontend (`VITE_API_BASE_URL`, three `VITE_AUTH0_*`).
 
-[`render.yaml`](render.yaml) declares which keys exist and which are auto-wired (`DATABASE_URL` from the managed Postgres reference) vs `sync: false` (everything sensitive, set manually in the dashboard). Nothing sensitive ever round-trips through git, and the only "configuration" committed alongside code is shape information in `.env.example` files.
+[`render.yaml`](../../render.yaml) declares which keys exist and which are auto-wired (`DATABASE_URL` from the managed Postgres reference) vs `sync: false` (everything sensitive, set manually in the dashboard). Nothing sensitive ever round-trips through git, and the only "configuration" committed alongside code is shape information in `.env.example` files.
 
 ### 4. What would you do differently if you had one more week?
 
@@ -204,7 +204,7 @@ Three layers, each with a single source of truth:
 
 ### 5. How did you ensure that authentication still works after deployment?
 
-- **`audience` in the SPA configuration.** Without it, `getAccessTokenSilently` returns an opaque token instead of a JWT and the backend rejects every authenticated call as 401. We added `audience: import.meta.env.VITE_AUTH0_AUDIENCE` to [`Auth0Provider`](client/src/App.tsx) before the first deploy.
+- **`audience` in the SPA configuration.** Without it, `getAccessTokenSilently` returns an opaque token instead of a JWT and the backend rejects every authenticated call as 401. We added `audience: import.meta.env.VITE_AUTH0_AUDIENCE` to [`Auth0Provider`](../../client/src/App.tsx) before the first deploy.
 - **Allowed Callback URLs** in the Auth0 dashboard include both `http://localhost:5173` and the Vercel URL, so login works in either environment without flipping a flag.
 - **JWKS-based verification.** The backend uses Auth0's published JWKS endpoint for RS256 signature verification (`express-oauth2-jwt-bearer`) — no shared secret to deploy, no key rotation overhead.
 - **Unauthenticated `/health`** so Render's probe doesn't need a token to mark the service healthy.
