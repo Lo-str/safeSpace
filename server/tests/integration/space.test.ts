@@ -1,6 +1,15 @@
 import request from "supertest";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
+// Bypass JWT verification so we can exercise the controllers themselves.
+// auth.test.ts covers the real middleware's 401 behavior.
+vi.mock("../../src/middleware/authMiddleware", () => ({
+  default: (req: any, _res: any, next: () => void) => {
+    req.auth = { payload: { sub: "test-user", aud: "test-audience" } };
+    next();
+  },
+}));
+
 import app from "../../src/app.js";
 
 const mockSpace = {
