@@ -35,11 +35,21 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+// `credentials: "include"` is set on every request for assignment compliance
+// even though authentication uses Bearer tokens (Auth0 SPA flow), not session
+// cookies. CORS is configured server-side to allow credentials from our
+// whitelisted origins, so the flag is a no-op today but ready for any future
+// cookie-based flow without further client changes.
+
 export const getSpaces = (): Promise<Space[]> =>
-  fetch(`${API_BASE_URL}/spaces`).then((r) => handleResponse<Space[]>(r));
+  fetch(`${API_BASE_URL}/spaces`, {
+    credentials: "include",
+  }).then((r) => handleResponse<Space[]>(r));
 
 export const getSpace = (id: string): Promise<Space> =>
-  fetch(`${API_BASE_URL}/spaces/${id}`).then((r) => handleResponse<Space>(r));
+  fetch(`${API_BASE_URL}/spaces/${id}`, {
+    credentials: "include",
+  }).then((r) => handleResponse<Space>(r));
 
 export const submitReview = (
   spaceId: string,
@@ -48,6 +58,7 @@ export const submitReview = (
 ): Promise<Review> =>
   fetch(`${API_BASE_URL}/spaces/${spaceId}/reviews`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
