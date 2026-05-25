@@ -33,6 +33,8 @@ services:
         sync: false
       - key: AUTH0_ISSUER_BASE_URL
         sync: false
-      # Update CLIENT_ORIGIN with the Vercel URL once the frontend is deployed:
+      # CLIENT_ORIGIN is a comma-separated allow-list. Set to the Vercel URL
+      # (and optionally http://localhost:5173 for local-against-prod testing):
+      # e.g. https://safe-space.vercel.app,http://localhost:5173
       - key: CLIENT_ORIGIN
         sync: false
