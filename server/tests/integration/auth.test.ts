@@ -21,19 +21,19 @@ describe('Auth middleware — /profile', () => {
   })
 })
 
-describe('Auth middleware — /gyms POST routes', () => {
-  it('returns 401 on POST /gyms without a token', async () => {
-    const res = await request(app).post('/gyms').send({ name: 'Test Gym' })
+describe('Auth middleware — /spaces POST routes', () => {
+  it('returns 401 on POST /spaces without a token', async () => {
+    const res = await request(app).post('/spaces').send({ name: 'Test Space' })
     expect(res.status).toBe(401)
   })
 
-  it('returns 401 on POST /gyms/:id/reviews without a token', async () => {
-    const res = await request(app).post('/gyms/123/reviews').send({ rating: 5 })
+  it('returns 401 on POST /spaces/:id/reviews without a token', async () => {
+    const res = await request(app).post('/spaces/123/reviews').send({ rating: 5 })
     expect(res.status).toBe(401)
   })
 
-  it('allows GET /gyms without a token', async () => {
-    const res = await request(app).get('/gyms')
+  it('allows GET /spaces without a token', async () => {
+    const res = await request(app).get('/spaces')
     expect(res.status).not.toBe(401)
   })
 })
