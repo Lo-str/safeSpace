@@ -19,9 +19,6 @@ import errorMiddleware from "./middleware/errorMiddleware";
 
 const app = express();
 
-// CLIENT_ORIGIN can be a single origin or a comma-separated list (no spaces
-// required around commas). Used to allow both local dev and the deployed
-// frontend without code changes.
 const allowedOrigins = (process.env.CLIENT_ORIGIN ?? "http://localhost:5173")
   .split(",")
   .map((o) => o.trim())

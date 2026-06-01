@@ -1,10 +1,4 @@
-/**
- * Mock database — replaces spaceModel.ts.
- * Types mirror the Prisma schema exactly.
- * Space/User carry a few UI-only extras (venueType, imageUrl, tags, pronouns,
- * avatar) that will need to be added to schema.prisma before switching to a
- * real database.
- */
+// Mock database. UI extras not yet in schema.prisma.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

@@ -88,8 +88,7 @@ describe("Browse Page", () => {
       expect(screen.getByText("Browse Spaces")).toBeInTheDocument();
       expect(screen.getByText("Queer Community Center")).toBeInTheDocument();
       expect(screen.getByText("Safe Space Café")).toBeInTheDocument();
-      // Cities appear both in cards and in the sidebar "City" filter list,
-      // so multiple matches are expected.
+      // Cities show in cards and filter list
       expect(screen.getAllByText("Stockholm").length).toBeGreaterThan(0);
       expect(screen.getAllByText("Gothenburg").length).toBeGreaterThan(0);
       expect(screen.getByText("4.5/5")).toBeInTheDocument();

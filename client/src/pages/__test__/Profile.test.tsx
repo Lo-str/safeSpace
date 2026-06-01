@@ -22,7 +22,7 @@ vi.mock("react-spinners", () => ({
   PacmanLoader: () => <div data-testid="pacman-loader" />,
 }));
 
-// Helper to create a complete mock for Auth0ContextInterface
+// Build a complete Auth0 mock
 const mockUseAuth0 = (
   overrides: Partial<Auth0ContextInterface<User>> = {},
 ): Auth0ContextInterface<User> => ({
@@ -104,12 +104,11 @@ describe("Profile Page", () => {
 
     renderWithRouter(<Profile />);
 
-    // Check for user data
     expect(screen.getByText(/Username: Test User/i)).toBeInTheDocument();
     expect(screen.getByText(/Email: test@example.com/i)).toBeInTheDocument();
     expect(screen.getByAltText("Test User")).toBeInTheDocument();
 
-    // Check for logout button
+
     const logoutButton = screen.getByRole("button", { name: /Logout/i });
     expect(logoutButton).toBeInTheDocument();
     fireEvent.click(logoutButton);

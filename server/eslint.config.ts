@@ -92,6 +92,6 @@ export default tseslint.config(
     },
   },
 
-  // Prettier last so it disables conflicting formatting rules
+  // Prettier disables conflicting rules
   prettier,
 );
