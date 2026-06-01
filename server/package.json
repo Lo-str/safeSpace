@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch server.ts",
-    "build": "esbuild server.ts --bundle --platform=node --target=node22 --format=esm --outfile=dist/server.js --external:@prisma/client --external:.prisma/client",
+    "build": "esbuild server.ts --bundle --platform=node --target=node22 --format=esm --outfile=dist/server.js --packages=external",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "start": "node ./dist/server.js"
