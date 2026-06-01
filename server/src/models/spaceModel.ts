@@ -13,19 +13,6 @@ export type VenueType =
   | "library" | "bookstore" | "theatre" | "cinema" | "gallery"
   | "park" | "salon" | "clinic" | "coworking" | "hostel" | "record-store";
 
-// Tag conventions — use these strings consistently:
-//   Accessibility:   wheelchair-accessible, step-free, accessible-bathroom,
-//                    pool-hoist, automatic-doors, large-print, captions,
-//                    adaptive-routes
-//   Sensory / ND:    sensory-friendly, low-noise, quiet-space
-//   Identity:        lgbtq-owned, lgbtq-affirming, trans-friendly,
-//                    trans-affirming, sapphic-owned, bipoc-owned,
-//                    bipoc-affirming, women-owned
-//   Class / Sober:   sliding-scale, free-entry, alcohol-free, sober-friendly
-//   Body:            body-positive
-//   Parents/Carers:  chest-feeding-friendly, changing-table-all-genders,
-//                    family-bathroom, stroller-accessible, high-chairs,
-//                    kids-welcome
 export type Tag = string;
 
 export interface Space {
@@ -39,7 +26,6 @@ export interface Space {
   reviews: Review[];
 }
 
-// Author profiles keyed by name; spread into each review for consistency.
 const USERS: Record<string, { authorAvatar: string; authorPronouns: string }> = {
   Linnea:  { authorAvatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Linnea&skinColor=DarkBrown&mouth=Default",     authorPronouns: "she/her"   },
   Erik:    { authorAvatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=Erik&skinColor=Black&mouth=Serious",           authorPronouns: "he/him"    },

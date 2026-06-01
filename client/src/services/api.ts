@@ -35,12 +35,6 @@ async function handleResponse<T>(res: Response): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-// `credentials: "include"` is set on every request for assignment compliance
-// even though authentication uses Bearer tokens (Auth0 SPA flow), not session
-// cookies. CORS is configured server-side to allow credentials from our
-// whitelisted origins, so the flag is a no-op today but ready for any future
-// cookie-based flow without further client changes.
-
 export const getSpaces = (): Promise<Space[]> =>
   fetch(`${API_BASE_URL}/spaces`, {
     credentials: "include",

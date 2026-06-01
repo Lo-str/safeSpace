@@ -23,7 +23,7 @@ vi.mock("@auth0/auth0-react", () => ({
   useAuth0: vi.fn(),
 }));
 
-// Helper function to create a complete mock for Auth0ContextInterface
+// Build a complete Auth0 mock
 const mockUseAuth0 = (
   overrides: Partial<Auth0ContextInterface<User>> = {},
 ): Auth0ContextInterface<User> => ({

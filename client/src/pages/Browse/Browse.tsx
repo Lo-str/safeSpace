@@ -146,7 +146,7 @@ function Browse() {
     fetchPlaces();
   }, []);
 
-  // Filter state is derived from the URL so browser back/forward restores it.
+  // Filter state lives in URL
   const searchQuery = searchParams.get("q") ?? "";
   const selectedCities = useMemo(
     () => new Set(parseList(searchParams.get("cities"))),
