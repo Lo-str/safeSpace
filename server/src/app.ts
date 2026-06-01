@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import profileRoutes from "./routes/profileRoutes";
 import spaceRoutes from "./routes/spaceRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -27,6 +28,7 @@ const allowedOrigins = (process.env.CLIENT_ORIGIN ?? "http://localhost:5173")
   .filter(Boolean);
 
 app.disable("x-powered-by");
+app.use(helmet());
 
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
