@@ -7,9 +7,11 @@ WORKDIR /app
 # Prisma's query engine requires OpenSSL on Alpine
 RUN apk add --no-cache openssl
 
-# Install deps first for better layer caching
+# Install deps first for better layer caching.
+# Use `npm install` instead of `npm ci` to tolerate cross-platform optional-dep
+# entries that differ between npm 10 (Render) and npm 11 (local).
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install --no-audit --no-fund
 
 # Generate Prisma client (needs schema present)
 COPY prisma ./prisma
