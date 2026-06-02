@@ -67,3 +67,15 @@
 .navbar-link:hover::after {
   width: 100%;
 }
+
+button.navbar-link {
+  background: none;
+  border: 1px solid currentColor;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+button.navbar-link::after {
+  display: none;
+}
