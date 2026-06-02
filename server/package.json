@@ -1,8 +1,8 @@
 {
-  "name": "gym-review-api",
+  "name": "safespace-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Safe Space backend (Express + Prisma + PostgreSQL)",
   "type": "module",
   "scripts": {
     "dev": "tsx watch server.ts",
@@ -11,17 +11,16 @@
     "test": "vitest",
     "start": "node ./dist/server.js"
   },
+  "author": "Lo",
+  "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MiniMinaa/gym-review-api.git"
+    "url": "git+https://github.com/Lo-str/safeSpace.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MiniMinaa/gym-review-api/issues"
+    "url": "https://github.com/Lo-str/safeSpace/issues"
   },
-  "homepage": "https://github.com/MiniMinaa/gym-review-api#readme",
+  "homepage": "https://github.com/Lo-str/safeSpace#readme",
   "dependencies": {
     "@prisma/client": "^5.16.0",
     "cors": "^2.8.6",
