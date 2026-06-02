@@ -23,6 +23,8 @@ export default function Login() {
   }, [isAuthenticated, isLoading, loginWithRedirect, navigate]);
 
   return isLoading ? (
-    <PacmanLoader cssOverride={{}} margin={2} size={25} />
+    <div className="page-loader">
+      <PacmanLoader margin={2} size={25} color="white" />
+    </div>
   ) : null;
 }

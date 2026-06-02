@@ -9,8 +9,8 @@ function Profile() {
   return (
     <div className="profile-container">
       {isLoading ? (
-        <div className="loading-spinner">
-          <PacmanLoader size={25} color="#6c5ce7" />
+        <div className="page-loader">
+          <PacmanLoader size={25} color="white" />
         </div>
       ) : isAuthenticated ? (
         <div className="profile-content">

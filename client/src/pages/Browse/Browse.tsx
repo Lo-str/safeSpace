@@ -243,8 +243,8 @@ function Browse() {
 
   if (loading)
     return (
-      <div className="loading-message">
-        <PacmanLoader cssOverride={{}} margin={2} size={25} />
+      <div className="page-loader">
+        <PacmanLoader margin={2} size={25} color="white" />
       </div>
     );
   if (error) return <div className="error-message">Error: {error}</div>;
