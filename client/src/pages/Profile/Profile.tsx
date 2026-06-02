@@ -25,7 +25,12 @@ function Profile() {
             <p className="profile-username">Username: {user?.name}</p>
             <p className="profile-email">Email: {user?.email}</p>
           </div>
-          <button onClick={() => logout()} className="logout-button">
+          <button
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+            }
+            className="logout-button"
+          >
             Logout
           </button>
         </div>
