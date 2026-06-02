@@ -16,8 +16,7 @@ import Review from "./pages/Review/Review";
 import { Auth0Provider, useAuth0, type AppState } from "@auth0/auth0-react";
 
 function Navbar() {
-  const { isAuthenticated, isLoading, error, logout } = useAuth0();
-  console.log("[Auth]", { isLoading, isAuthenticated, error: error?.message });
+  const { isAuthenticated, logout } = useAuth0();
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -54,7 +53,6 @@ function Navbar() {
 
 function AppWithAuth() {
   const navigate = useNavigate();
-  console.log("[App] mounted at", window.location.href);
 
   const authorizationParams = useMemo(
     () => ({
@@ -66,10 +64,8 @@ function AppWithAuth() {
   );
 
   const onRedirectCallback = useCallback(
-    (appState?: AppState) => {
-      console.log("[Auth0] onRedirectCallback", { appState });
-      navigate(appState?.returnTo ?? "/", { replace: true });
-    },
+    (appState?: AppState) =>
+      navigate(appState?.returnTo ?? "/", { replace: true }),
     [navigate],
   );
 
