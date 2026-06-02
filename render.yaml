@@ -9,7 +9,7 @@ services:
   - type: web
     name: safespace-server
     runtime: docker
-    dockerfilePath: ./server/Dockerfile
+    dockerfilePath: ./docker/server.Dockerfile
     dockerContext: ./server
     plan: free
     region: frankfurt

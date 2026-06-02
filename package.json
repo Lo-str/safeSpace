@@ -1,22 +1,18 @@
 {
-  "name": "gym-review-api",
+  "name": "safespace",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Safe Space — Yelp-like platform for underrepresented groups (monorepo: client + server)",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\""
   },
-  "keywords": [],
-  "author": "",
+  "author": "Lo",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
-    "@types/jest": "^30.0.0",
     "@types/supertest": "^7.2.0",
     "concurrently": "^9.2.1",
-    "jest": "^30.3.0",
-    "supertest": "^7.2.2",
-    "ts-jest": "^29.4.9"
+    "supertest": "^7.2.2"
   }
 }

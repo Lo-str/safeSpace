@@ -1,13 +1,12 @@
-name: Frontend Tests
+name: Client tests
+
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
-    name: Run Frontend Tests
+    name: Run client tests
     runs-on: ubuntu-latest
     defaults:
       run:
