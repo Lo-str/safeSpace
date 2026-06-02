@@ -25,8 +25,8 @@ function PlaceList() {
 
   if (loading) {
     return (
-      <div className="loader-container">
-        <PacmanLoader />
+      <div className="page-loader">
+        <PacmanLoader size={25} color="white" />
       </div>
     );
   }

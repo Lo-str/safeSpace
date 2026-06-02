@@ -79,3 +79,10 @@ button.navbar-link {
 button.navbar-link::after {
   display: none;
 }
+
+.page-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - var(--navbar-height));
+}
