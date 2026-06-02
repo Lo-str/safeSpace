@@ -1,0 +1,57 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  server-tests:
+    name: Server tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm install
+        working-directory: ./server
+      - run: npx vitest run --reporter=verbose
+        working-directory: ./server
+        env:
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+          CLIENT_ORIGIN: ${{ secrets.CLIENT_ORIGIN }}
+
+  client-tests:
+    name: Client tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm test
+
+  deploy-server:
+    name: Deploy server (Render)
+    needs: [server-tests, client-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy hook
+        run: |
+          curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+
+  deploy-client:
+    name: Deploy client (Vercel)
+    needs: [server-tests, client-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        run: |
+          curl -fsS -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
