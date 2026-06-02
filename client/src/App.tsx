@@ -12,7 +12,43 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile/Profile";
 import Cards from "./pages/Cards/Cards";
 import Review from "./pages/Review/Review";
-import { Auth0Provider, type AppState } from "@auth0/auth0-react";
+import { Auth0Provider, useAuth0, type AppState } from "@auth0/auth0-react";
+
+function Navbar() {
+  const { isAuthenticated, logout } = useAuth0();
+  return (
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo" aria-label="Safe Space — home">
+          Safe Space
+        </Link>
+        <div className="navbar-links">
+          <Link to="/places" className="navbar-link">
+            Browse
+          </Link>
+          <Link to="/profile" className="navbar-link">
+            Profile
+          </Link>
+          {isAuthenticated ? (
+            <button
+              type="button"
+              onClick={() =>
+                logout({ logoutParams: { returnTo: window.location.origin } })
+              }
+              className="navbar-link"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link to="/login" className="navbar-link">
+              Login
+            </Link>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}
 
 function AppWithAuth() {
   const navigate = useNavigate();
@@ -23,7 +59,6 @@ function AppWithAuth() {
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       cacheLocation="memory"
       useRefreshTokens={true}
-      useRefreshTokensFallback={false}
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: import.meta.env.VITE_AUTH0_AUDIENCE,
@@ -33,24 +68,7 @@ function AppWithAuth() {
         navigate(appState?.returnTo ?? "/", { replace: true });
       }}
     >
-      <nav className="navbar">
-        <div className="navbar-container">
-          <Link to="/" className="navbar-logo" aria-label="Safe Space — home">
-            Safe Space
-          </Link>
-          <div className="navbar-links">
-            <Link to="/places" className="navbar-link">
-              Browse
-            </Link>
-            <Link to="/profile" className="navbar-link">
-              Profile
-            </Link>
-            <Link to="/login" className="navbar-link">
-              Login
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/places" element={<Browse />} />
