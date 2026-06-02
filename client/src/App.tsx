@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -53,20 +54,31 @@ function Navbar() {
 function AppWithAuth() {
   const navigate = useNavigate();
 
+  const authorizationParams = useMemo(
+    () => ({
+      redirect_uri: window.location.origin,
+      audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+      scope: "openid profile email offline_access",
+    }),
+    [],
+  );
+
+  const onRedirectCallback = useCallback(
+    (appState?: AppState) => {
+      console.log("[Auth0] onRedirectCallback", { appState });
+      navigate(appState?.returnTo ?? "/", { replace: true });
+    },
+    [navigate],
+  );
+
   return (
     <Auth0Provider
       domain={import.meta.env.VITE_AUTH0_DOMAIN}
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       cacheLocation="memory"
       useRefreshTokens={true}
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
-        scope: "openid profile email offline_access",
-      }}
-      onRedirectCallback={(appState?: AppState) => {
-        navigate(appState?.returnTo ?? "/", { replace: true });
-      }}
+      authorizationParams={authorizationParams}
+      onRedirectCallback={onRedirectCallback}
     >
       <Navbar />
       <Routes>
