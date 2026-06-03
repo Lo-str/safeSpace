@@ -9,6 +9,8 @@ async function main() {
   await prisma.space.deleteMany();
   await prisma.user.deleteMany();
 
+  const userById = new Map(users.map((u) => [u.id, u]));
+
   console.log(`Seeding ${users.length} users…`);
   for (const u of users) {
     await prisma.user.create({
@@ -31,12 +33,16 @@ async function main() {
         location: s.location,
         price: s.price,
         userId: s.userId,
+        imageUrl: s.imageUrl ?? null,
+        venueType: s.venueType ?? null,
+        tags: s.tags ?? [],
       },
     });
   }
 
   console.log(`Seeding ${reviews.length} reviews…`);
   for (const r of reviews) {
+    const author = r.userId ? userById.get(r.userId) : undefined;
     await prisma.review.create({
       data: {
         id: r.id,
@@ -44,6 +50,9 @@ async function main() {
         rating: r.rating,
         userId: r.userId,
         spaceId: r.spaceId,
+        author: author?.name ?? null,
+        authorAvatar: author?.avatar ?? null,
+        authorPronouns: author?.pronouns ?? null,
       },
     });
   }
@@ -52,8 +61,8 @@ async function main() {
 }
 
 main()
-  .catch((e) => {
+  .catch((e: unknown) => {
     console.error(e);
-    process.exit(1);
+    throw e;
   })
   .finally(() => prisma.$disconnect());
