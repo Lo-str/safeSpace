@@ -20,7 +20,7 @@ describe("Browse Page", () => {
     vi.resetAllMocks();
   });
 
-  // Helper to render with MemoryRouter (for Link components)
+  // Helper to render with MemoryRouter
   const renderWithRouter = (ui: React.ReactElement) => {
     return render(<MemoryRouter>{ui}</MemoryRouter>);
   };

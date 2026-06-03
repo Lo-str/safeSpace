@@ -1,5 +1,4 @@
 :root {
-  /* PBr7 earth pigment palette */
   --color-raw-sienna: #d78c3c;
   --color-burnt-sienna: #b0552a;
   --color-burnt-umber: #5c3317;
@@ -11,7 +10,7 @@
   --color-accent-shadow: rgba(249, 168, 212, 0.25);
   --color-on-accent: #18181b;
 
-  /* Dark NEUTRAL theme — surfaces are not brown */
+  /* Dark theme */
   --color-bg-page: #18181b;
   --color-bg-card: #27272a;
   --color-bg-soft: #3f3f46;
