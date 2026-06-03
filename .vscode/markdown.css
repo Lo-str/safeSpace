@@ -2,7 +2,7 @@
    HEADERS
    =============================== */
 h1 {
-  color: #5cffb3;
+  color: #b4e4f2;
 }
 
 h2 {
@@ -10,30 +10,28 @@ h2 {
 }
 
 h3 {
-  color: #c18d52;
+  color: #eabb84;
 }
 
 /* ===============================
    CODE
    =============================== */
 code {
-  background: #121417;
-  color: #ffd76a;
+  background: #1f2226;
+  color: rgb(190, 188, 188);
   padding: 2px 6px;
-  border-radius: 6px;
 }
 
 pre {
-  background: linear-gradient(135deg, #14161a, #0e1013);
+  background: linear-gradient(135deg, #1f2226, #1f2226);
   border: 1px solid #ffd45dc5;
-  border-radius: 14px;
   padding: 16px;
   overflow: auto;
 }
 
 pre code {
   background: transparent;
-  color: #e6edf3;
+  color: #cfd5db;
   padding: 0;
 }
 
@@ -50,9 +48,8 @@ hr {
 /* ===============================
    CALLOUTS
    =============================== */
-blockquote,
-.markdown-alert {
-  background: linear-gradient(135deg, #203b37, #081b1b);
+blockquote {
+  background: linear-gradient(135deg, #32504b, #152020);
   border-left: 6px solid #5a8f76;
   border-radius: 14px;
   padding: 14px 18px;
@@ -60,62 +57,77 @@ blockquote,
   color: #eee8b2;
 }
 
-blockquote p,
-.markdown-alert p {
+blockquote p {
   margin: 0;
 }
 
-.markdown-alert > :first-child {
-  margin-top: 0;
-}
-
-.markdown-alert > :last-child {
-  margin-bottom: 0;
-}
-
-/* Alert title row */
-.markdown-alert .markdown-alert-title {
-  font-weight: 800;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
-  margin-bottom: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 10px;
-  border-radius: 999px;
-}
-
 /* ===============================
-   ALERT TYPES
+   LINKS
    =============================== */
-.markdown-alert.markdown-alert-tip {
-  border-left-color: #96cdb0;
+html body a,
+html body a:link,
+html body a:visited,
+.vscode-body a,
+.vscode-body a:link,
+.vscode-body a:visited,
+.vscode-dark a,
+.vscode-light a,
+.vscode-high-contrast a,
+.markdown-body a,
+[class*="vscode-"] a {
+  color: #ed9cca;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 121, 198, 0.6) !important;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  font-weight: 600;
 }
 
-.markdown-alert.markdown-alert-tip .markdown-alert-title {
-  background: #96cdb0;
-  color: #081b1b;
+html body a:hover,
+.vscode-body a:hover,
+[class*="vscode-"] a:hover {
+  color: #ffb1da;
+  text-decoration-color: #ffb1da;
 }
 
-.markdown-alert.markdown-alert-warning,
-.markdown-alert.markdown-alert-caution {
-  border-left-color: #c18d52;
+/* Inline code inside a link — pink */
+html body a code,
+html body a:link code,
+html body a:visited code,
+.vscode-body a code,
+[class*="vscode-"] a code {
+  color: #ff79c6;
 }
 
-.markdown-alert.markdown-alert-warning .markdown-alert-title,
-.markdown-alert.markdown-alert-caution .markdown-alert-title {
-  background: #c18d52;
-  color: #081b1b;
+html body a:hover code,
+.vscode-body a:hover code,
+[class*="vscode-"] a:hover code {
+  color: #ffb1da;
 }
 
-.markdown-alert.markdown-alert-note,
-.markdown-alert.markdown-alert-important {
-  border-left-color: #eee8b2;
+/* Links inside callouts — softer pink */
+html body blockquote a,
+html body blockquote a:link,
+html body blockquote a:visited,
+.vscode-body blockquote a,
+[class*="vscode-"] blockquote a {
+  color: #ff9ad3;
 }
 
-.markdown-alert.markdown-alert-note .markdown-alert-title,
-.markdown-alert.markdown-alert-important .markdown-alert-title {
-  background: #d2e685;
-  color: #073062;
+html body blockquote a:hover,
+[class*="vscode-"] blockquote a:hover {
+  color: #ffccea;
+}
+
+/* Inline code inside a link in callouts — softer pink */
+html body blockquote a code,
+.vscode-body blockquote a code,
+[class*="vscode-"] blockquote a code {
+  color: #ff9ad3;
+}
+
+html body blockquote a:hover code,
+.vscode-body blockquote a:hover code,
+[class*="vscode-"] blockquote a:hover code {
+  color: #ffccea;
 }
