@@ -12,3 +12,5 @@ backend/.env
 /src/generated/prisma
 
 debugging.md
+.vercel
+.env*
