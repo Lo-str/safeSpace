@@ -27,9 +27,27 @@ function Navbar() {
           <Link to="/places" className="navbar-link">
             Browse
           </Link>
-          <Link to="/profile" className="navbar-link">
-            Profile
-          </Link>
+          {isAuthenticated ? (
+            <Link to="/profile" className="navbar-link">
+              Profile
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() =>
+                loginWithRedirect({
+                  appState: { returnTo: "/profile" },
+                  authorizationParams: {
+                    screen_hint: "login",
+                    scope: "openid profile email",
+                  },
+                })
+              }
+              className="navbar-link"
+            >
+              Profile
+            </button>
+          )}
           {isAuthenticated ? (
             <button
               type="button"

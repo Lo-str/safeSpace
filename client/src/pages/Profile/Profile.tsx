@@ -1,23 +1,18 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { PacmanLoader } from "react-spinners";
 import "./Profile.css";
 
 function Profile() {
-  const { isAuthenticated, user, logout, isLoading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, user, logout, isLoading } = useAuth0();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      window.history.replaceState(null, "", "/");
-      loginWithRedirect({
-        appState: { returnTo: "/profile" },
-        authorizationParams: {
-          screen_hint: "login",
-          scope: "openid profile email",
-        },
-      });
+      navigate("/", { replace: true });
     }
-  }, [isAuthenticated, isLoading, loginWithRedirect]);
+  }, [isAuthenticated, isLoading, navigate]);
 
   if (isLoading || !isAuthenticated) {
     return (

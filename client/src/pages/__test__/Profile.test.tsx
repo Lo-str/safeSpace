@@ -11,6 +11,11 @@ vi.mock("@auth0/auth0-react", () => ({
   useAuth0: vi.fn(),
 }));
 
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-router-dom")>();
+  return { ...actual, useNavigate: () => mockNavigate };
+});
 
 // Mock PacmanLoader
 vi.mock("react-spinners", () => ({
@@ -73,15 +78,12 @@ describe("Profile Page", () => {
     expect(screen.getByTestId("pacman-loader")).toBeInTheDocument();
   });
 
-  it("calls loginWithRedirect when not authenticated", () => {
-    const mockLoginWithRedirect = vi.fn().mockResolvedValue(undefined);
+  it("redirects to home when not authenticated", () => {
     vi.mocked(useAuth0).mockReturnValue(
-      mockUseAuth0({ isAuthenticated: false, isLoading: false, loginWithRedirect: mockLoginWithRedirect }),
+      mockUseAuth0({ isAuthenticated: false, isLoading: false }),
     );
     renderWithRouter(<Profile />);
-    expect(mockLoginWithRedirect).toHaveBeenCalledWith(
-      expect.objectContaining({ appState: { returnTo: "/profile" } }),
-    );
+    expect(mockNavigate).toHaveBeenCalledWith("/", { replace: true });
   });
 
   it("shows user data and logout button when authenticated", () => {
