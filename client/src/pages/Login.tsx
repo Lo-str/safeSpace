@@ -13,6 +13,7 @@ export default function Login() {
       navigate("/profile", { replace: true });
       return;
     }
+    window.history.replaceState(null, "", "/");
     loginWithRedirect({
       appState: { returnTo: "/profile" },
       authorizationParams: {
