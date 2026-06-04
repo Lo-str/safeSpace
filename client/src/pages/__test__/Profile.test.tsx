@@ -4,7 +4,6 @@ import Profile from "../Profile/Profile";
 import { useAuth0, Auth0ContextInterface, User } from "@auth0/auth0-react";
 import { MemoryRouter } from "react-router-dom";
 import { MfaApiClient } from "@auth0/auth0-spa-js";
-import Login from "../Login";
 import "@testing-library/jest-dom";
 
 // Mock useAuth0
@@ -12,10 +11,11 @@ vi.mock("@auth0/auth0-react", () => ({
   useAuth0: vi.fn(),
 }));
 
-// Mock Login component
-vi.mock("../Login", () => ({
-  default: () => <div>Login Component</div>,
-}));
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-router-dom")>();
+  return { ...actual, useNavigate: () => mockNavigate };
+});
 
 // Mock PacmanLoader
 vi.mock("react-spinners", () => ({
@@ -78,12 +78,12 @@ describe("Profile Page", () => {
     expect(screen.getByTestId("pacman-loader")).toBeInTheDocument();
   });
 
-  it("renders Login component when not authenticated", () => {
+  it("redirects to home when not authenticated", () => {
     vi.mocked(useAuth0).mockReturnValue(
       mockUseAuth0({ isAuthenticated: false, isLoading: false }),
     );
     renderWithRouter(<Profile />);
-    expect(screen.getByText(/Login Component/i)).toBeInTheDocument();
+    expect(mockNavigate).toHaveBeenCalledWith("/", { replace: true });
   });
 
   it("shows user data and logout button when authenticated", () => {
