@@ -26,7 +26,12 @@ function ReviewForm({ placeId, onReviewSubmitted }: ReviewProps) {
 
     try {
       const token = await getAccessTokenSilently();
-      await submitReview(placeId, { rating, comment }, token);
+      await submitReview(placeId, {
+        rating,
+        comment,
+        author: isAuthenticated ? (user?.name ?? "") : authorInput.trim(),
+        authorAvatar: isAuthenticated ? user?.picture : undefined,
+      }, token);
 
       setStatus("success");
       setRating(null);

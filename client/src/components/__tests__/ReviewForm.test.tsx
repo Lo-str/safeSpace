@@ -86,6 +86,7 @@ describe("ReviewForm Component", () => {
           body: JSON.stringify({
             rating: 5,
             comment: "Great place!",
+            author: "Test User",
           }),
         }),
       );

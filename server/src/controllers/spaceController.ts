@@ -106,7 +106,7 @@ export const createReview = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const { rating, comment, userId } = req.body;
+  const { rating, comment, userId, author, authorAvatar } = req.body;
   const spaceId = req.params.id;
 
   if (!spaceId || Array.isArray(spaceId)) {
@@ -128,6 +128,12 @@ export const createReview = async (
 
     if (typeof userId === "string" && userId.length > 0) {
       reviewData.userId = userId;
+    }
+    if (typeof author === "string" && author.length > 0) {
+      reviewData.author = author;
+    }
+    if (typeof authorAvatar === "string" && authorAvatar.length > 0) {
+      reviewData.authorAvatar = authorAvatar;
     }
 
     const review = await prisma.review.create({

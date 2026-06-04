@@ -25,6 +25,8 @@ export interface Space {
 export interface NewReviewInput {
   rating: number;
   comment: string;
+  author: string;
+  authorAvatar?: string;
 }
 
 async function handleResponse<T>(res: Response): Promise<T> {
