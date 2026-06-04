@@ -16,7 +16,7 @@ import Review from "./pages/Review/Review";
 import { Auth0Provider, useAuth0, type AppState } from "@auth0/auth0-react";
 
 function Navbar() {
-  const { isAuthenticated, logout } = useAuth0();
+  const { isAuthenticated, logout, loginWithRedirect } = useAuth0();
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -41,9 +41,21 @@ function Navbar() {
               Logout
             </button>
           ) : (
-            <Link to="/login" className="navbar-link">
+            <button
+              type="button"
+              onClick={() =>
+                loginWithRedirect({
+                  appState: { returnTo: "/profile" },
+                  authorizationParams: {
+                    screen_hint: "login",
+                    scope: "openid profile email",
+                  },
+                })
+              }
+              className="navbar-link"
+            >
               Login
-            </Link>
+            </button>
           )}
         </div>
       </div>
